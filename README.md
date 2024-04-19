@@ -14,7 +14,7 @@ Para executar este projeto, você precisa ter as seguintes bibliotecas instalada
 
 * nltk
 * tkinter
-* googletrans - ve
+* googletrans - version
 
 Você pode instalar essas dependências usando pip:
 
