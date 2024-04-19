@@ -1,7 +1,8 @@
-import nltk
-
+import tkinter as tk
+from tkinter import ttk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from googletrans import Translator
+import nltk
 
 nltk.download('vader_lexicon')
 
@@ -11,7 +12,7 @@ new_words = {
     'ruim': -2.0     # Exemplo de palavra negativa
 }
 
-# Tradutor de girias
+# Tradutor de gírias
 substituir_palavras = {
     'gostosa': 'muito boa',
     'tesão': 'muito boa',
@@ -28,8 +29,6 @@ def analise_sentimento(texto):
     # Traduz o texto para inglês
     texto_traduzido = translator.translate(texto, dest='en').text
 
-    print(f"Texto traduzido: {texto_traduzido}")
-    
     # Cria um objeto SentimentIntensityAnalyzer
     sia = SentimentIntensityAnalyzer()
     sia.lexicon.update(new_words)
@@ -37,11 +36,6 @@ def analise_sentimento(texto):
     # Analisa o sentimento do texto traduzido
     sentiment = sia.polarity_scores(texto_traduzido)
 
-    print("Resultados gerais: ", sentiment)
-    print(sentiment['neg']*100, "% Negativo")
-    print(sentiment['neu']*100, "% Neutro")
-    print(sentiment['pos']*100, "% Positivo")
-    
     if sentiment['compound'] >= 0.6:
         resultado = "Ótimo"
     elif sentiment['compound'] >= 0.2:
@@ -53,11 +47,31 @@ def analise_sentimento(texto):
     else:
         resultado = "Péssimo"
 
-    return resultado
+    return resultado, sentiment
 
-# comentario = "Essa sopa esta muito gostosa"
-comentario = "Melhor sopa que eu ja tomei"
+def calcular_sentimento():
+    comentario = comentario_entry.get()
+    resultado, sentiment = analise_sentimento(comentario)
+    resultado_label.config(text=f"O texto analisado é considerado: {resultado} ({sentiment['compound']})")
+    porcentagem_label.config(text=f"Positivo: {sentiment['pos']*100:.2f}% | Neutro: {sentiment['neu']*100:.2f}% | Negativo: {sentiment['neg']*100:.2f}%")
 
-resultado = analise_sentimento(comentario)
+# Configuração da janela principal
+root = tk.Tk()
+root.title("Análise de Sentimento")
 
-print(f"O texto analisado é considerado: {resultado}")
+# Criando widgets
+comentario_label = ttk.Label(root, text="Digite o comentário:")
+comentario_entry = ttk.Entry(root, width=50)
+analise_button = ttk.Button(root, text="Analisar", command=calcular_sentimento)
+resultado_label = ttk.Label(root, text="")
+porcentagem_label = ttk.Label(root, text="")
+
+# Posicionamento dos widgets
+comentario_label.grid(row=0, column=0, padx=10, pady=10)
+comentario_entry.grid(row=0, column=1, padx=10, pady=10)
+analise_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+resultado_label.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+porcentagem_label.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
+
+# Iniciando o loop principal da aplicação
+root.mainloop()
