@@ -14,12 +14,12 @@ Para executar este projeto, você precisa ter as seguintes bibliotecas instalada
 
 * nltk
 * tkinter
-* googletrans
+* googletrans - ve
 
 Você pode instalar essas dependências usando pip:
 
 ```bash
-pip install nltk tkinter googletrans
+pip install googletrans==4.0.0-rc1
 ```
 
 ## Como usar
